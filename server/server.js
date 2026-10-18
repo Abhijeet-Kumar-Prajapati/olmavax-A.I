@@ -8,7 +8,7 @@ const { build, types } = require('./builders');
 const { webContext } = require('./search');
 const { makeImage } = require('./image');
 const { zip } = require('./zip');
-const charvis = require('./charvis');
+const sidecar = require('./olmavax-agent');
 const { MODELS, PROVIDER_NAME } = require('./models');
 const { Store } = require('./collections');
 const plugins = require('./plugins');
@@ -101,11 +101,11 @@ function createServer({ dataDir } = {}) {
       let keys = {};
       if (req.method === 'POST') { try { keys = (await readBody(req)).keys || {}; } catch {} }
       const prov = await providerStatus(keys);
-      prov.charvis = await charvis.probe();
+      prov.sidecar = await sidecar.probe();
       let live = prov.anthropic ? 'anthropic' : prov.openai ? 'openai' : prov.ollama ? 'ollama' : 'mock';
       return json(res, 200, {
         name: APP_NAME, version: APP_VERSION, providers: prov, live,
-        charvis: { available: prov.charvis, url: charvis.DEFAULT_BASE, path: path.join(__dirname, '..', 'advanced', 'OpenCharvis') },
+        sidecar: { available: prov.sidecar, url: sidecar.DEFAULT_BASE, path: path.join(__dirname, '..', 'advanced', 'Olmavax Agent') },
         providerNames: PROVIDER_NAME,
         models: MODELS,
         agents: Object.values(AGENTS).map(({ id, name, icon }) => ({ id, name, icon })),

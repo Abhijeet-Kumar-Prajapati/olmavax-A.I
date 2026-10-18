@@ -28,12 +28,12 @@ const MODELS = [
   { id: 'mistral', provider: 'ollama', label: 'Mistral', note: 'Ollama · fully offline', free: true, icon: 'mistral' },
 
   // --- advanced sidecar ---
-  { id: 'charvis', provider: 'charvis', label: 'OpenCharvis', note: 'Advanced Python agent · memory & tools', icon: 'charvis' },
+  { id: 'sidecar', provider: 'sidecar', label: 'Olmavax Agent', note: 'Advanced Python agent · memory & tools', icon: 'sidecar' },
 ];
 
 const PROVIDER_NAME = {
   auto: 'Automatic', mock: 'Olmavax Offline Brain', anthropic: 'Anthropic',
-  openai: 'OpenAI / compatible', ollama: 'Ollama (local)', charvis: 'OpenCharvis (advanced)',
+  openai: 'OpenAI / compatible', ollama: 'Ollama (local)', sidecar: 'Olmavax Agent (advanced)',
 };
 
 module.exports = { MODELS, PROVIDER_NAME };

@@ -1,11 +1,11 @@
 'use strict';
 /**
- * Tests for v2.1: OpenCharvis bridge, model catalogue, redesigned front-end.
+ * Tests for v2.1: Olmavax Agent bridge, model catalogue, redesigned front-end.
  */
 const test = require('node:test'), assert = require('node:assert');
 const fs = require('fs'), os = require('os'), path = require('path');
 const { createServer } = require('../server/server');
-const charvis = require('../server/charvis');
+const sidecar = require('../server/olmavax-agent');
 const { MODELS, PROVIDER_NAME } = require('../server/models');
 const I18N = require('../public/i18n');
 
@@ -21,20 +21,20 @@ test.before(async () => {
 });
 test.after(() => srv.close());
 
-/* ── OpenCharvis bridge ───────────────────────────────────────── */
+/* ── Olmavax Agent bridge ───────────────────────────────────────── */
 
-test('charvis: probe and status degrade quietly when the sidecar is down', async () => {
-  assert.equal(await charvis.probe(CLOSED), false);
-  assert.equal(await charvis.status(CLOSED), null);
+test('sidecar: probe and status degrade quietly when the sidecar is down', async () => {
+  assert.equal(await sidecar.probe(CLOSED), false);
+  assert.equal(await sidecar.status(CLOSED), null);
 });
 
-test('charvis: selecting it without a sidecar gives an actionable error', async () => {
+test('sidecar: selecting it without a sidecar gives an actionable error', async () => {
   const r = await fetch(base + '/api/chat', {
     method: 'POST', headers: { 'content-type': 'application/json' },
-    body: JSON.stringify({ messages: [{ role: 'user', content: 'hi' }], provider: 'charvis' }),
+    body: JSON.stringify({ messages: [{ role: 'user', content: 'hi' }], provider: 'sidecar' }),
   });
   const t = await r.text();
-  assert.ok(t.includes('OpenCharvis is not running'), 'missing guidance');
+  assert.ok(t.includes('Olmavax Agent is not running'), 'missing guidance');
   assert.ok(t.includes('"done":true'), 'stream was not terminated cleanly');
 });
 
@@ -55,16 +55,16 @@ test('models: entries are well formed and uniquely addressable', () => {
 test('models: every zero-config path is represented', () => {
   assert.ok(MODELS.some(m => m.free && m.provider === 'mock'), 'no offline brain');
   assert.ok(MODELS.some(m => m.free && m.provider === 'ollama'), 'no local model');
-  assert.ok(MODELS.some(m => m.provider === 'charvis'), 'no OpenCharvis entry');
+  assert.ok(MODELS.some(m => m.provider === 'sidecar'), 'no Olmavax Agent entry');
 });
 
-test('status advertises the catalogue, versions and charvis bridge', async () => {
+test('status advertises the catalogue, versions and sidecar bridge', async () => {
   const j = await (await fetch(base + '/api/status')).json();
   assert.equal(j.version, '3.0.0');
   assert.ok(Array.isArray(j.models) && j.models.length === MODELS.length, 'models missing');
   assert.ok(j.providerNames && j.providerNames.anthropic, 'provider names missing');
-  assert.ok(j.providers && 'charvis' in j.providers, 'charvis not in providers');
-  assert.ok(j.charvis && j.charvis.url, 'charvis info missing');
+  assert.ok(j.providers && 'sidecar' in j.providers, 'sidecar not in providers');
+  assert.ok(j.sidecar && j.sidecar.url, 'sidecar info missing');
 });
 
 /* ── front-end ────────────────────────────────────────────────── */
@@ -134,16 +134,82 @@ test('dom: every id app.js reaches for exists in the shell', () => {
   assert.deepEqual([...used].filter(x => !have.has(x) && !dyn.has(x)), []);
 });
 
-test('settings: shows how to launch the OpenCharvis sidecar', () => {
-  assert.ok(read('app.js').includes('charvis.py ui'), 'launch hint missing');
-  assert.ok(I18N.en.charvisHint, 'charvisHint missing');
+test('settings: shows how to launch the Olmavax Agent sidecar', () => {
+  assert.ok(read('app.js').includes('advanced/olmavax-agent/olmavax_agent.py ui'), 'launch hint missing');
+  assert.ok(I18N.en.sidecarHint, 'sidecarHint missing');
+  assert.ok(!/charvis/i.test(read('app.js')), 'app.js still mentions the old sidecar name');
+});
+
+/* ═══════════ the rebrand: no old name survives anywhere ═══════════ */
+
+test('rebrand: the old sidecar name is gone from every shipped file', () => {
+  const SKIP = new Set(['.git', 'node_modules', '__pycache__']);
+  const walk = (dir, out = []) => {
+    for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
+      if (SKIP.has(e.name)) continue;
+      const p = path.join(dir, e.name);
+      if (e.isDirectory()) walk(p, out);
+      else if (/\.(js|css|html|json|md|txt|bat|yml|yaml|py|svg|webmanifest)$/i.test(e.name)) out.push(p);
+    }
+    return out;
+  };
+  // the only two places it may stay are the legacy-vault readers, so a vault
+  // written by a build from before the rename still opens
+  const ALLOWED = [
+    { file: 'vault.py', marker: 'LEGACY_MAGIC = "CHARVIS1"' },
+    { file: 'security.py', marker: 'LEGACY_MARKER = "CHARVIS1"' },
+  ];
+  const root = path.join(__dirname, '..');
+  const SELF = path.join(__dirname, 'test_v21.js');
+  const stray = [];
+  for (const f of walk(root)) {
+    if (path.resolve(f) === path.resolve(SELF)) continue;   // this file names them on purpose
+    const rel = path.relative(root, f).replace(/\\/g, '/');
+    const lines = fs.readFileSync(f, 'utf8').split(/\r?\n/);
+    lines.forEach((line, i) => {
+      if (!/charvis/i.test(line)) return;
+      if (ALLOWED.some(a => rel.endsWith(a.file) && line.includes(a.marker))) return;
+      stray.push(rel + ':' + (i + 1) + '  ' + line.trim().slice(0, 70));
+    });
+  }
+  assert.deepEqual(stray, [], 'old name still present:\n        ' + stray.join('\n        '));
+});
+
+test('rebrand: the old paths were actually renamed on disk', () => {
+  const root = path.join(__dirname, '..');
+  assert.ok(!fs.existsSync(path.join(root, 'advanced', 'OpenCharvis')),
+            'advanced/OpenCharvis still exists');
+  assert.ok(!fs.existsSync(path.join(root, 'server', 'charvis.js')),
+            'server/charvis.js still exists');
+  assert.ok(fs.existsSync(path.join(root, 'advanced', 'olmavax-agent', 'olmavax_agent.py')),
+            'the renamed python launcher is missing');
+  assert.ok(fs.existsSync(path.join(root, 'advanced', 'olmavax-agent', 'olmavax_agent', '__init__.py')),
+            'the renamed python package is missing');
+  assert.ok(fs.existsSync(path.join(root, 'server', 'olmavax-agent.js')),
+            'the renamed bridge is missing');
+  // read() resolves inside public/, so repo-level files are read directly
+  const serverJs = fs.readFileSync(path.join(root, 'server', 'server.js'), 'utf8');
+  const bridgeJs = fs.readFileSync(path.join(root, 'server', 'olmavax-agent.js'), 'utf8');
+  assert.ok(serverJs.includes("require('./olmavax-agent')"),
+            'the server does not require the renamed bridge');
+  assert.ok(bridgeJs.includes('OLMAVAX_AGENT_URL'),
+            'the bridge still reads the old environment variable');
+});
+
+test('rebrand: no i18n key or T() call was left dangling', () => {
+  const i18n = new Function(read('i18n.js') + '; return I18N;')();
+  const app = read('app.js');
+  const used = [...new Set([...app.matchAll(/T\('(\w+)'\)/g)].map(m => m[1]))];
+  const missing = used.filter(k => !(k in i18n.en));
+  assert.deepEqual(missing, [], 'app.js calls T() with keys that do not exist: ' + missing.join(', '));
+  assert.ok(!/charvis/i.test(JSON.stringify(i18n.en)), 'a translation value still uses the old name');
 });
 
 /* ── packaging ────────────────────────────────────────────────── */
 
-test('packaging: env example documents the charvis sidecar', () => {
+test('packaging: env example documents the sidecar sidecar', () => {
   const env = fs.readFileSync(path.join(__dirname, '..', '.env.example'), 'utf8');
-  assert.ok(env.includes('CHARVIS_URL'), 'CHARVIS_URL missing');
+  assert.ok(env.includes('OLMAVAX_AGENT_URL'), 'OLMAVAX_AGENT_URL missing');
   assert.ok(env.includes('8787'), 'PORT missing');
 });
 

@@ -1,5 +1,5 @@
 # Olmavax A.I — container image
-# Node side only. The OpenCharvis Python agent runs as an optional sidecar.
+# Node side only. The Olmavax Agent Python agent runs as an optional sidecar.
 FROM node:20-alpine
 
 WORKDIR /app

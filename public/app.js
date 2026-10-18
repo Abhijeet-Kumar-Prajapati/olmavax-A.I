@@ -63,7 +63,7 @@ const GO_SEND = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stro
 const GO_STOP = '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6.5" y="6.5" width="11" height="11" rx="2.5"/></svg>';
 
 /* ─────────────────── runtime state ─────────────────── */
-let busy = false, ctrl = null, agents = [], models = [], providers = {}, charvis = { available: false };
+let busy = false, ctrl = null, agents = [], models = [], providers = {}, sidecar = { available: false };
 let mode = null, think = !!S.think, atts = [], liveEngine = 'mock', greetPick = Math.random(), stickBottom = true;
 
 /* ──────────── toasts ──────────── */
@@ -237,7 +237,7 @@ function paintEngine() {
   const e = $('#engine'); if (!e) return;
   const L = {
     anthropic: { t: 'Claude · online', ok: 1 }, openai: { t: 'OpenAI · online', ok: 1 },
-    ollama: { t: 'Ollama · offline', ok: 1 }, charvis: { t: 'OpenCharvis', ok: 1 },
+    ollama: { t: 'Ollama · offline', ok: 1 }, sidecar: { t: 'Olmavax Agent', ok: 1 },
     mock: { t: T('offlineBrain'), ok: 0 },
   }[liveEngine] || { t: T('offlineBrain'), ok: 0 };
   e.className = 'eng ' + (L.ok ? 'live' : 'warn');
@@ -247,7 +247,7 @@ function paintEngine() {
 async function checkEngine() {
   try {
     const j = await api('/api/status', { method: 'POST', body: JSON.stringify({ keys: S.keys }) });
-    providers = j.providers || {}; charvis = j.charvis || { available: false };
+    providers = j.providers || {}; sidecar = j.sidecar || { available: false };
     liveEngine = j.live || 'mock';
     paintEngine(); updateModelBtn(); updatePlugins();
   } catch { /* offline */ }
@@ -1016,7 +1016,7 @@ function settingsPanel() {
   const langOpts = ['en', 'hi', 'es', 'fr', 'ar']
     .map(l => '<option value="' + l + '"' + (S.lang === l ? ' selected' : '') + '>' +
       ({ en: 'English', hi: 'हिन्दी', es: 'Español', fr: 'Français', ar: 'العربية' })[l] + '</option>').join('');
-  const readyCount = ['anthropic', 'openai', 'ollama', 'charvis'].filter(p => providers[p]).length;
+  const readyCount = ['anthropic', 'openai', 'ollama', 'sidecar'].filter(p => providers[p]).length;
 
   modal(
     '<h3>' + IC.gear + ' ' + esc(T('settings')) + '</h3>' +
@@ -1047,10 +1047,10 @@ function settingsPanel() {
     '<label>' + esc(T('fontSize')) + '<input id="kFs" type="range" min="0.85" max="1.25" step="0.05" value="' + (S.fontScale || 1) + '"></label>' +
     '<label>' + esc(T('talkSpeed')) + '<input id="kRate" type="range" min="0.5" max="2" step="0.1" value="' + (S.talkRate || 1) + '"></label>' +
     '<div class="frow"><span>' + esc(T('sendOnEnter')) + '</span><button class="b" id="kEnter" role="switch" aria-checked="' + (S.enterToSend !== false) + '">' + (S.enterToSend !== false ? 'On' : 'Off') + '</button></div>' +
-    '<h4>' + esc(T('advanced')) + ' — OpenCharvis</h4>' +
-    '<p class="muted">' + esc(T('charvisHint')) + '</p>' +
-    '<code class="codeblock">python advanced/OpenCharvis/charvis.py ui</code>' +
-    '<p class="muted">' + (charvis.available ? '✅ ' + esc(T('enginesReady')) : '⚠️ ' + esc(T('charvisOff'))) + '</p>' +
+    '<h4>' + esc(T('advanced')) + ' — Olmavax Agent</h4>' +
+    '<p class="muted">' + esc(T('sidecarHint')) + '</p>' +
+    '<code class="codeblock">python advanced/olmavax-agent/olmavax_agent.py ui</code>' +
+    '<p class="muted">' + (sidecar.available ? '✅ ' + esc(T('enginesReady')) : '⚠️ ' + esc(T('sidecarOff'))) + '</p>' +
     '<h4>' + esc(T('dataControls')) + '</h4><p class="muted">' + esc(T('dataNote')) + '</p>' +
     '<div class="grid2"><button class="b" id="kExport">' + esc(T('exportData')) + '</button>' +
     '<button class="b" id="kImport">' + esc(T('importData')) + '</button></div>' +
@@ -1112,9 +1112,9 @@ function modelPanel(back) {
   const byProv = {};
   for (const m of models) (byProv[m.provider] = byProv[m.provider] || []).push(m);
   const NAME = { auto: T('auto'), mock: T('offlineBrain'), anthropic: 'Anthropic',
-                 openai: 'OpenAI / compatible', ollama: 'Ollama', charvis: 'OpenCharvis' };
+                 openai: 'OpenAI / compatible', ollama: 'Ollama', sidecar: 'Olmavax Agent' };
   let h = '<h3>' + esc(T('chooseModel')) + '</h3>';
-  for (const p of ['auto', 'anthropic', 'openai', 'ollama', 'charvis']) {
+  for (const p of ['auto', 'anthropic', 'openai', 'ollama', 'sidecar']) {
     const arr = byProv[p]; if (!arr) continue;
     const ready = p === 'auto' || p === 'mock' || providers[p];
     h += '<div class="pal-h">' + esc(NAME[p] || p) + (ready ? '' : ' · ' + esc(T('needsKey'))) + '</div><div class="mlist">';
@@ -1488,7 +1488,7 @@ function wire() {
   try {
     const j = await api('/api/status');
     agents = j.agents || []; models = j.models || []; providers = j.providers || {};
-    charvis = j.charvis || { available: false };
+    sidecar = j.sidecar || { available: false };
     const v = $('#ver'); if (v) v.textContent = j.version || '3.0.0';
   } catch {}
   if (!S.chats.length) newChat(); else render();

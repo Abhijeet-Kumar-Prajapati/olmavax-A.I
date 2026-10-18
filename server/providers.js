@@ -2,7 +2,7 @@
 // Multi-provider streaming: Anthropic, OpenAI (+any OpenAI-compatible), Ollama (offline), and a built-in offline brain.
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const offline = require('./offline');
-const charvis = require('./charvis');
+const sidecar = require('./olmavax-agent');
 async function* lines(res) {
   const reader = res.body.getReader(), dec = new TextDecoder(); let buf = '';
   for (;;) {
@@ -55,7 +55,7 @@ async function* mock(p, { messages, agent, mem }) {
     : offline.reply(last, mem || EMPTY_MEM);
   for (const w of text.split(/(\s+)/)) { yield w; await sleep(2); }
 }
-const IMPL = { anthropic, openai, ollama, mock, charvis };
+const IMPL = { anthropic, openai, ollama, mock, sidecar };
 async function ollamaUp(base) { try { const r = await fetch(base.replace(/\/$/, '') + '/api/tags', { signal: AbortSignal.timeout(700) }); return r.ok; } catch { return false; } }
 
 async function pickProvider(name = 'auto', keys = {}) {
@@ -63,9 +63,9 @@ async function pickProvider(name = 'auto', keys = {}) {
     anthropic: keys.anthropic || process.env.ANTHROPIC_API_KEY, openai: keys.openai || process.env.OPENAI_API_KEY,
     openaiBase: keys.openaiBase || process.env.OPENAI_BASE_URL, ollama: keys.ollama || process.env.OLLAMA_URL || 'http://localhost:11434',
   };
-  if (name === 'charvis') {
-    if (!(await charvis.probe())) throw new Error('OpenCharvis is not running. Start it with:  python advanced/OpenCharvis/charvis.py ui');
-    return { name: 'charvis', base: charvis.DEFAULT_BASE };
+  if (name === 'sidecar') {
+    if (!(await sidecar.probe())) throw new Error('Olmavax Agent is not running. Start it with:  python advanced/olmavax-agent/olmavax_agent.py ui');
+    return { name: 'sidecar', base: sidecar.DEFAULT_BASE };
   }
   if (name === 'anthropic') { if (!k.anthropic) throw new Error('No Anthropic API key. Add it in Settings.'); return { name, apiKey: k.anthropic }; }
   if (name === 'openai') { if (!k.openai) throw new Error('No OpenAI/compatible API key. Add it in Settings.'); return { name, apiKey: k.openai, base: k.openaiBase }; }
@@ -74,7 +74,7 @@ async function pickProvider(name = 'auto', keys = {}) {
   if (k.anthropic) return { name: 'anthropic', apiKey: k.anthropic };
   if (k.openai) return { name: 'openai', apiKey: k.openai, base: k.openaiBase };
   if (await ollamaUp(k.ollama)) return { name: 'ollama', base: k.ollama };
-  if (await charvis.probe()) return { name: 'charvis', base: charvis.DEFAULT_BASE };
+  if (await sidecar.probe()) return { name: 'sidecar', base: sidecar.DEFAULT_BASE };
   return { name: 'mock' };
 }
 function streamChat(provider, opts) { return (IMPL[provider.name] || IMPL.mock)(provider, opts); }
@@ -85,7 +85,7 @@ async function providerStatus(keys = {}) {
     anthropic: !!(keys.anthropic || process.env.ANTHROPIC_API_KEY),
     openai: !!(keys.openai || process.env.OPENAI_API_KEY),
     ollama: await ollamaUp(base),
-    charvis: await charvis.probe(),
+    sidecar: await sidecar.probe(),
   };
 }
 module.exports = { pickProvider, streamChat, collect, providerStatus };

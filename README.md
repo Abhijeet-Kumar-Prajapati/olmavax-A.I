@@ -18,7 +18,7 @@ PDF export, QR generation and syntax highlighting for twenty-two languages.
 
 Everything works offline. A built-in brain answers maths, conversions, text
 utilities and web lookups with no network at all. Add a provider key and the
-same interface talks to Claude, GPT, Ollama or the OpenCharvis sidecar.
+same interface talks to Claude, GPT, Ollama or the Olmavax Agent sidecar.
 
 ## Highlights
 
@@ -39,7 +39,7 @@ same interface talks to Claude, GPT, Ollama or the OpenCharvis sidecar.
 ## Requirements
 
 - **Node.js 18 or newer** — that is the only hard requirement.
-- Optional: [Python 3.10+](https://www.python.org/) for the OpenCharvis sidecar.
+- Optional: [Python 3.10+](https://www.python.org/) for the Olmavax Agent sidecar.
 - Optional: [Ollama](https://ollama.com) for a fully local model.
 
 ## Getting started
@@ -68,13 +68,13 @@ The app is useful with no configuration at all. When you want a real model, open
 Keys are stored in your browser's `localStorage` and are never written to disk by
 the app. For headless or Docker setups, copy `.env.example` to `.env` instead.
 
-### The OpenCharvis sidecar
+### The Olmavax Agent sidecar
 
-`advanced/OpenCharvis` is an optional Python agent that adds planning, memory
+`advanced/olmavax-agent` is an optional Python agent that adds planning, memory
 search, scheduled skills and a voice pipeline.
 
 ```bash
-python advanced/OpenCharvis/charvis.py ui
+python advanced/olmavax-agent/olmavax_agent.py ui
 ```
 
 It listens on `127.0.0.1:8765` and Olmavax bridges to it automatically. If it is
@@ -102,7 +102,7 @@ olmavax-ai/
 │  ├─ agents.js         agent definitions and routing
 │  ├─ qr.js             QR encoder (GF(256), Reed-Solomon, masking)
 │  ├─ pdf.js            dependency-free PDF writer
-│  ├─ charvis.js        OpenCharvis sidecar bridge
+│  ├─ sidecar.js        Olmavax Agent sidecar bridge
 │  ├─ scheduler.js      cron-style scheduled tasks
 │  └─ collections.js    library and workspace storage
 ├─ public/            Browser front end
@@ -113,7 +113,7 @@ olmavax-ai/
 │  ├─ i18n.js           222 strings across 5 languages
 │  └─ sw.js             offline service worker
 ├─ advanced/
-│  └─ OpenCharvis/      optional Python agent (20 modules)
+│  └─ Olmavax Agent/      optional Python agent (20 modules)
 ├─ python/
 │  └─ olmavax_cli.py    command-line client
 ├─ extension/          browser extension shell
@@ -156,8 +156,3 @@ panel. Load the folder as an unpacked extension in your browser.
 - There is no analytics, telemetry, tracking or crash reporting.
 - The server binds to `127.0.0.1` by default, so it is not reachable from your
   local network unless you deliberately change `HOST`.
-
-## Credits
-
-OpenCharvis is vendored under `advanced/OpenCharvis`. See its own README for
-details.
