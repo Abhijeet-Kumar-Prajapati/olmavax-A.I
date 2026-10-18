@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Olmavax A.I — local-first AI workspace</title>
+<meta name="description" content="Olmavax A.I is a local-first, multi-agent AI workspace with voice, memory, plugins and syntax highlighting. Runs on your machine, no account, no cloud.">
+<meta name="color-scheme" content="dark">
+<meta property="og:title" content="Olmavax A.I">
+<meta property="og:description" content="A local-first, multi-agent AI workspace. Zero dependencies. Works with no API key.">
+<meta property="og:image" content="app.png">
+<link rel="icon" href="logo-mark.svg" type="image/svg+xml">
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  :root {
+    --bg: #08090c;
+    --panel: #101319;
+    --panel-2: #161a22;
+    --line: #222834;
+    --line-2: #2e3646;
+    --txt: #e9edf5;
+    --txt-2: #a8b2c4;
+    --txt-3: #6d7789;
+    --accent: #4f8cff;
+    --accent-2: #a855f7;
+    --ok: #35d07f;
+    --mono: ui-monospace, "SF Mono", "Cascadia Code", Consolas, monospace;
+    --sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--txt);
+    font-family: var(--sans); line-height: 1.65;
+    -webkit-font-smoothing: antialiased; overflow-x: hidden;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 22px; }
+
+  /* ── hero ─────────────────────────────────────────── */
+  header.hero { position: relative; padding: 92px 0 64px; text-align: center; overflow: hidden; }
+  header.hero::before {
+    content: ''; position: absolute; inset: -40% 0 auto; height: 620px;
+    background:
+      radial-gradient(600px 300px at 22% 40%, rgba(79,140,255,.20), transparent 70%),
+      radial-gradient(560px 300px at 78% 34%, rgba(168,85,247,.18), transparent 70%);
+    filter: blur(10px); pointer-events: none;
+  }
+  header.hero > * { position: relative; }
+  .logo-lg { width: 92px; height: 92px; margin-bottom: 20px; animation: float 6s ease-in-out infinite; }
+  @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-9px); } }
+  h1 {
+    margin: 0 0 14px; font-size: clamp(2.1rem, 6vw, 3.5rem);
+    font-weight: 700; letter-spacing: -1.2px; line-height: 1.1;
+  }
+  h1 em {
+    font-style: normal;
+    background: linear-gradient(92deg, var(--accent), var(--accent-2));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .tagline { max-width: 620px; margin: 0 auto 30px; color: var(--txt-2); font-size: 1.1rem; }
+  .cta { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-bottom: 16px; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 9px;
+    padding: 13px 24px; border-radius: 12px; font-weight: 550; font-size: .97rem;
+    transition: transform .14s, box-shadow .2s, background .2s;
+  }
+  .btn:hover { text-decoration: none; transform: translateY(-2px); }
+  .btn-primary { background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: #fff; box-shadow: 0 8px 26px rgba(79,140,255,.30); }
+  .btn-ghost { background: var(--panel-2); color: var(--txt); border: 1px solid var(--line-2); }
+  .btn-ghost:hover { background: #1c212b; }
+  .badges { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+  .badge {
+    padding: 5px 12px; border-radius: 999px; font-size: .8rem;
+    background: var(--panel-2); border: 1px solid var(--line); color: var(--txt-2);
+  }
+  .badge b { color: var(--txt); font-weight: 600; }
+
+  /* ── sections ─────────────────────────────────────── */
+  section { padding: 56px 0; }
+  h2 { margin: 0 0 10px; font-size: clamp(1.5rem, 3.6vw, 2rem); font-weight: 660; letter-spacing: -.5px; }
+  .sub { color: var(--txt-3); margin: 0 0 30px; }
+  .grid { display: grid; gap: 14px; }
+  .g3 { grid-template-columns: repeat(auto-fit, minmax(255px, 1fr)); }
+  .g2 { grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
+  .card {
+    padding: 20px; border-radius: 16px;
+    background: var(--panel); border: 1px solid var(--line);
+    transition: border-color .2s, transform .2s;
+  }
+  .card:hover { border-color: var(--line-2); transform: translateY(-3px); }
+  .card .ic {
+    width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center;
+    margin-bottom: 12px; font-size: 18px; background: rgba(79,140,255,.13);
+  }
+  .card h3 { margin: 0 0 6px; font-size: 1.02rem; font-weight: 600; }
+  .card p { margin: 0; color: var(--txt-2); font-size: .93rem; }
+
+  /* ── screenshot ────────────────────────────────────── */
+  .shot-wrap {
+    margin-top: 26px; border-radius: 18px; overflow: hidden;
+    border: 1px solid var(--line-2);
+    box-shadow: 0 26px 70px rgba(0,0,0,.55);
+    background: var(--panel);
+  }
+  .shot-wrap img { display: block; width: 100%; height: auto; }
+
+  /* ── code ──────────────────────────────────────────── */
+  pre {
+    margin: 0; padding: 20px 22px; border-radius: 14px; overflow-x: auto;
+    background: var(--panel); border: 1px solid var(--line);
+    font-family: var(--mono); font-size: .88rem; line-height: 1.7; color: var(--txt-2);
+  }
+  pre .c { color: var(--txt-3); }
+  pre .k { color: #c792ea; }
+  pre .s { color: #98c379; }
+
+  /* ── stats ─────────────────────────────────────────── */
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; }
+  .stat { padding: 20px 14px; border-radius: 14px; background: var(--panel); border: 1px solid var(--line); text-align: center; }
+  .stat b { display: block; font-size: 1.9rem; font-weight: 700; letter-spacing: -1px;
+    background: linear-gradient(92deg, var(--accent), var(--accent-2));
+    -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .stat span { font-size: .82rem; color: var(--txt-3); }
+
+  /* ── note ──────────────────────────────────────────── */
+  .note {
+    padding: 18px 20px; border-radius: 14px;
+    background: rgba(53,208,127,.07); border: 1px solid rgba(53,208,127,.24);
+    color: var(--txt-2); font-size: .94rem;
+  }
+  .note b { color: var(--txt); }
+
+  footer {
+    margin-top: 30px; padding: 34px 0 46px; border-top: 1px solid var(--line);
+    color: var(--txt-3); font-size: .88rem;
+  }
+  footer .wrap { display: flex; flex-wrap: wrap; gap: 14px; justify-content: space-between; align-items: center; }
+
+  @media (max-width: 620px) {
+    header.hero { padding: 62px 0 44px; }
+    .logo-lg { width: 68px; height: 68px; }
+    .btn { width: 100%; justify-content: center; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <img src="logo.svg" alt="Olmavax A.I" class="logo-lg">
+    <h1>Your AI workspace,<br><em>running on your machine</em></h1>
+    <p class="tagline">
+      Olmavax A.I is a multi-agent AI workspace with voice, memory, plugins,
+      scheduled tasks and syntax highlighting. No account, no cloud, no
+      telemetry — open it and it works, even with no API key.
+    </p>
+    <div class="cta">
+      <a class="btn btn-primary" href="https://github.com/Abhijeet-Kumar-Prajapati/olmavax-A.I">View on GitHub</a>
+      <a class="btn btn-ghost" href="#install">Quick start</a>
+    </div>
+    <div class="badges">
+      <span class="badge"><b>Zero</b>&nbsp;dependencies</span>
+      <span class="badge"><b>Node</b>&nbsp;18+</span>
+      <span class="badge"><b>19</b>&nbsp;plugins</span>
+      <span class="badge"><b>9</b>&nbsp;agents</span>
+      <span class="badge"><b>22</b>&nbsp;languages highlighted</span>
+      <span class="badge"><b>5</b>&nbsp;UI languages</span>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <h2>See it working</h2>
+    <p class="sub">A real conversation: nine agents, highlighted Python, and the chat history sitting in the sidebar.</p>
+    <div class="shot-wrap">
+      <img src="app.png" alt="Olmavax A.I answering a coding question with syntax-highlighted Python" loading="lazy">
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>What makes it different</h2>
+    <p class="sub">Built from scratch with plain Node and vanilla JavaScript. Nothing to install, nothing to configure.</p>
+    <div class="grid g3">
+      <div class="card">
+        <div class="ic">🎙️</div>
+        <h3>Voice that shares the chat</h3>
+        <p>Voice floats as a dock above the composer instead of taking over the screen. Speak, hear the reply, and keep typing — all at once.</p>
+      </div>
+      <div class="card">
+        <div class="ic">🧩</div>
+        <h3>19 local plugins</h3>
+        <p>Calculator with roots and percentages, unit converter, text tools, colour, dates, passwords. They run on your server, not through a model.</p>
+      </div>
+      <div class="card">
+        <div class="ic">🧠</div>
+        <h3>Memory that sticks</h3>
+        <p>Facts you tell it are stored and recalled across conversations. Nothing is sent anywhere to make that happen.</p>
+      </div>
+      <div class="card">
+        <div class="ic">📅</div>
+        <h3>Scheduled tasks</h3>
+        <p>Cron-style jobs that run a prompt on a timer, so the workspace works while you are away.</p>
+      </div>
+      <div class="card">
+        <div class="ic">🎨</div>
+        <h3>Syntax highlighting</h3>
+        <p>Twenty-two languages, written from scratch and XSS-safe. No CDN, no third-party highlighter.</p>
+      </div>
+      <div class="card">
+        <div class="ic">📐</div>
+        <h3>A sidebar that fits</h3>
+        <p>Icon rail, small, medium or large. The chat history stays reachable at every single size.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Works with nothing</h2>
+    <p class="sub">Clone it, run it, use it. A provider key is optional.</p>
+    <div class="stats">
+      <div class="stat"><b>0</b><span>npm dependencies</span></div>
+      <div class="stat"><b>320+</b><span>test checks, all green</span></div>
+      <div class="stat"><b>1.2&nbsp;MB</b><span>whole repository</span></div>
+      <div class="stat"><b>127.0.0.1</b><span>bound by default</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="install">
+  <div class="wrap">
+    <h2>Quick start</h2>
+    <p class="sub">Requires Node.js 18 or newer. That is the only requirement.</p>
+<pre><span class="c"># clone</span>
+git clone https://github.com/Abhijeet-Kumar-Prajapati/olmavax-A.I.git
+cd olmavax-A.I
+
+<span class="c"># run - there is nothing to install</span>
+npm start
+
+<span class="c"># then open</span>
+<span class="s">http://127.0.0.1:8787</span></pre>
+
+    <div class="note" style="margin-top:16px">
+      <b>This page is the project website, not the app.</b>
+      GitHub Pages only serves static files, so Olmavax A.I runs on your own
+      computer. Add a provider key in <b>Settings</b> to talk to Claude, GPT or
+      Ollama — without one, the built-in offline brain still answers.
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>Olmavax A.I — a local-first AI workspace.</span>
+    <span>
+      <a href="https://github.com/Abhijeet-Kumar-Prajapati/olmavax-A.I">Source</a> ·
+      <a href="https://github.com/Abhijeet-Kumar-Prajapati/olmavax-A.I/issues">Issues</a>
+    </span>
+  </div>
+</footer>
+
+</body>
+</html>
