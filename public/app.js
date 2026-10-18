@@ -1056,6 +1056,9 @@ function settingsPanel() {
     '<button class="b" id="kImport">' + esc(T('importData')) + '</button></div>' +
     '<button class="b danger" id="kClear">' + esc(T('clearAll')) + '</button>' +
     '<h4>' + esc(T('about')) + '</h4><p class="muted">Olmavax A.I · v<span id="ver">3.0.0</span> · local-first</p>' +
+    '<a class="b web-link" id="kSite" href="https://abhijeet-kumar-prajapati.github.io/olmavax-A.I/docs/" target="_blank" rel="noopener">' +
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 2.5 15 0 18M12 3c-2.5 2.7-2.5 15 0 18"/></svg>' +
+      esc(T('visitWebsite')) + '</a>' +
     '<button class="b primary" id="kSave">' + esc(T('save')) + '</button>', () => {
     $('#kSave').onclick = async () => {
       S.name = $('#k0').value.trim(); S.agent = $('#kAgent').value;

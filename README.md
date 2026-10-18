@@ -1,5 +1,7 @@
 # Olmavax A.I
 
+### 🌐 Live website → **https://abhijeet-kumar-prajapati.github.io/olmavax-A.I/docs/**
+
 A local-first, multi-agent AI workspace that runs entirely on your own machine.
 No account, no cloud, no telemetry — open the app and it works, even with no API key.
 
