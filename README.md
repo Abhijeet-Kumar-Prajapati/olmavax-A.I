@@ -157,7 +157,8 @@ panel. Load the folder as an unpacked extension in your browser.
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+No license file is published with this project. All rights reserved by the
+author unless you add one.
 
 ## Credits
 
