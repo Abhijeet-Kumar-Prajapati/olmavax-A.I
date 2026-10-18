@@ -155,11 +155,6 @@ panel. Load the folder as an unpacked extension in your browser.
 - The server binds to `127.0.0.1` by default, so it is not reachable from your
   local network unless you deliberately change `HOST`.
 
-## License
-
-No license file is published with this project. All rights reserved by the
-author unless you add one.
-
 ## Credits
 
 OpenCharvis is vendored under `advanced/OpenCharvis`. See its own README for
