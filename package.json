@@ -1,0 +1,22 @@
+{
+  "name": "olmavax-ai",
+  "version": "3.0.0",
+  "description": "Olmavax A.I — multi-agent AI workspace with voice, memory, 19 local plugins, a code workbench, scheduled tasks, syntax highlighting in 20+ languages, QR generation, PDF export and an OpenCharvis sidecar.",
+  "main": "server/server.js",
+  "scripts": {
+    "start": "node server/server.js",
+    "test": "node --test tests/test.js tests/test_v21.js && node tests/check-api.js && node tests/check-highlight.js && node tests/check-qr.js && node tests/check-calc.js && node tests/check-e2e.js",
+    "test:unit": "node --test tests/test.js tests/test_v21.js",
+    "test:api": "node tests/check-api.js",
+    "test:highlight": "node tests/check-highlight.js",
+    "test:qr": "node tests/check-qr.js",
+    "test:calc": "node tests/check-calc.js",
+    "test:e2e": "node tests/check-e2e.js",
+    "charvis": "python advanced/OpenCharvis/charvis.py ui"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "MIT",
+  "keywords": ["ai", "olmavax", "multi-agent", "voice", "offline", "memory", "plugins", "codex", "qr", "pdf", "syntax-highlighting", "pwa", "opencharvis"]
+}

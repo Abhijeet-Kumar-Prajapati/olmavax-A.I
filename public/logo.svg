@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="Olmavax A.I">
+  <title>Olmavax A.I</title>
+  <defs>
+    <!-- deep-space backdrop -->
+    <radialGradient id="bg" cx="50%" cy="38%" r="72%">
+      <stop offset="0%"  stop-color="#1b2340"/>
+      <stop offset="55%" stop-color="#0d1122"/>
+      <stop offset="100%" stop-color="#05070f"/>
+    </radialGradient>
+    <!-- ring metal -->
+    <linearGradient id="ring" x1="12%" y1="6%" x2="88%" y2="96%">
+      <stop offset="0%"   stop-color="#9fd0ff"/>
+      <stop offset="28%"  stop-color="#4f8cff"/>
+      <stop offset="58%"  stop-color="#8b5cf6"/>
+      <stop offset="82%"  stop-color="#3b6ef5"/>
+      <stop offset="100%" stop-color="#a9c8ff"/>
+    </linearGradient>
+    <!-- core glass -->
+    <radialGradient id="core" cx="38%" cy="30%" r="78%">
+      <stop offset="0%"   stop-color="#ffffff"/>
+      <stop offset="26%"  stop-color="#bcd8ff"/>
+      <stop offset="60%"  stop-color="#5b8cff"/>
+      <stop offset="100%" stop-color="#1b2a63"/>
+    </radialGradient>
+    <linearGradient id="arc" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   stop-color="#8b5cf6"/>
+      <stop offset="100%" stop-color="#4f8cff"/>
+    </linearGradient>
+
+    <filter id="soft" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="14" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="drop" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="10" stdDeviation="16" flood-color="#4f8cff" flood-opacity=".55"/>
+    </filter>
+    <filter id="inner" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="7" result="blur"/>
+      <feOffset dy="4" result="o"/>
+      <feComposite in="o" in2="blur" operator="arithmetic" k2="-1" k3="1" result="spec"/>
+      <feComposite in="spec" in2="SourceGraphic" operator="in"/>
+      <feMerge><feMergeNode in="SourceGraphic"/><feMergeNode in="spec"/></feMerge>
+    </filter>
+    <clipPath id="ringClip"><circle cx="256" cy="256" r="150"/></clipPath>
+  </defs>
+
+  <!-- backdrop -->
+  <circle cx="256" cy="256" r="256" fill="url(#bg)"/>
+
+  <!-- orbit halo -->
+  <circle cx="256" cy="256" r="196" fill="none" stroke="url(#arc)" stroke-width="2.5" opacity=".45" filter="url(#soft)"/>
+
+  <!-- main ring -->
+  <circle cx="256" cy="256" r="150" fill="none" stroke="url(#ring)" stroke-width="30" filter="url(#drop)"/>
+
+  <!-- inner glass core -->
+  <circle cx="256" cy="256" r="122" fill="url(#core)" filter="url(#inner)"/>
+  <circle cx="256" cy="256" r="122" fill="none" stroke="#ffffff" stroke-opacity=".35" stroke-width="2"/>
+
+  <!-- neural network inside the core -->
+  <g clip-path="url(#ringClip)" opacity=".92">
+    <g stroke="#eaf2ff" stroke-width="3.2" stroke-linecap="round" fill="none">
+      <path d="M256 168 L186 232 L256 300 L326 232 Z"/>
+      <path d="M186 232 L200 316"/>
+      <path d="M326 232 L312 316"/>
+      <path d="M256 168 L256 300" opacity=".55"/>
+    </g>
+    <g fill="#ffffff">
+      <circle cx="256" cy="168" r="13"/>
+      <circle cx="186" cy="232" r="11"/>
+      <circle cx="326" cy="232" r="11"/>
+      <circle cx="256" cy="300" r="12"/>
+      <circle cx="200" cy="316" r="8.5"/>
+      <circle cx="312" cy="316" r="8.5"/>
+    </g>
+  </g>
+
+  <!-- orbiting satellite node -->
+  <g>
+    <circle cx="412" cy="176" r="15" fill="#8b5cf6" filter="url(#soft)"/>
+    <circle cx="412" cy="176" r="7.5" fill="#e9d5ff"/>
+  </g>
+  <circle cx="412" cy="176" r="15" fill="none" stroke="#c4b5fd" stroke-opacity=".55" stroke-width="2"/>
+
+  <!-- specular sweep -->
+  <path d="M150 196 a150 150 0 0 1 150 -66" fill="none" stroke="#ffffff" stroke-opacity=".55"
+        stroke-width="9" stroke-linecap="round" filter="url(#soft)"/>
+</svg>

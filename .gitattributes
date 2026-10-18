@@ -1,0 +1,20 @@
+# Keep line endings stable no matter what each contributor's git config says.
+# Store LF in the repository; let Windows check out CRLF where it wants it.
+
+* text=auto eol=lf
+
+# Windows launcher and batch files genuinely need CRLF.
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Binary-ish assets - never touch.
+*.gif binary
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.ico  binary
+*.woff2 binary
+
+# Lockfiles and generated bundles stay untouched.
+package-lock.json -diff
+*.min.js -diff

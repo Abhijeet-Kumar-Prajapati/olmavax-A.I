@@ -1,0 +1,13 @@
+{
+  "manifest_version": 3,
+  "name": "Olmavax A.I Companion",
+  "version": "3.0.0",
+  "description": "Ask Olmavax A.I about any page or selected text. Works with your local Olmavax A.I server (online or fully offline).",
+  "permissions": ["activeTab", "scripting", "storage", "contextMenus"],
+  "host_permissions": ["http://localhost:8787/*", "http://127.0.0.1:8787/*"],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Olmavax A.I"
+  },
+  "background": { "service_worker": "background.js" }
+}

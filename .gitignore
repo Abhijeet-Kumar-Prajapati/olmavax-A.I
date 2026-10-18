@@ -1,0 +1,51 @@
+# ---- secrets and local configuration -------------------------------
+# .env.example IS committed; the real .env must never be.
+.env
+.env.*
+!.env.example
+
+# ---- runtime data --------------------------------------------------
+# Chat history, memory and workspace state are written here per machine.
+# The server creates the folder itself (mkdirSync recursive), so only the
+# placeholder is tracked - ignore the contents, not the directory itself.
+data/*
+!data/.gitkeep
+
+# OpenCharvis keeps its vault, logs and generated output locally.
+advanced/OpenCharvis/data/
+advanced/OpenCharvis/.vault
+advanced/OpenCharvis/*.log
+advanced/OpenCharvis/logs/
+
+# ---- python --------------------------------------------------------
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+
+# ---- node ----------------------------------------------------------
+node_modules/
+npm-debug.log*
+yarn-error.log*
+*.tsbuildinfo
+
+# ---- editors and OS ------------------------------------------------
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ---- build output --------------------------------------------------
+dist/
+build/
+coverage/
+*.zip
+!advanced/OpenCharvis/*.zip
+
+# ---- never commit local logs ---------------------------------------
+*.log
+olmavax-ai.log

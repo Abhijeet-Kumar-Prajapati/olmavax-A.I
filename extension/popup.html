@@ -1,0 +1,10 @@
+<!doctype html><meta charset="utf-8"><style>
+body{width:360px;font:14px system-ui;background:#0b1020;color:#e8ecf8;margin:0;padding:12px}
+textarea,input,button{width:100%;box-sizing:border-box;margin:4px 0;padding:8px;border-radius:8px;border:1px solid #26305a;background:#151c36;color:inherit;font:inherit}
+button{background:#6c8cff;border:0;cursor:pointer}#out{white-space:pre-wrap;max-height:260px;overflow:auto;margin-top:8px}.row{display:flex;gap:6px}
+</style>
+<b>\u{2728} Olmavax AI</b>
+<input id="srv" placeholder="Server URL" value="http://localhost:8787">
+<textarea id="q" rows="3" placeholder="Ask anything\u2026"></textarea>
+<div class="row"><button id="ask">Ask</button><button id="sum">Summarize page</button><button id="sel">Use selection</button></div>
+<div id="out"></div><script src="popup.js"></script>
