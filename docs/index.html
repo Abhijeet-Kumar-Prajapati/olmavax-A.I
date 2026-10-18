@@ -96,6 +96,45 @@
   .card h3 { margin: 0 0 6px; font-size: 1.02rem; font-weight: 600; }
   .card p { margin: 0; color: var(--txt-2); font-size: .93rem; }
 
+  /* ── download ─────────────────────────────────────── */
+  #download { padding: 34px 0 8px; }
+  .dl-grid {
+    display: grid; gap: 14px; margin-top: 26px;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  }
+  .dl-card {
+    display: flex; flex-direction: column; gap: 4px;
+    padding: 20px; border-radius: 16px; text-decoration: none; color: inherit;
+    background: var(--panel); border: 1px solid var(--line);
+    transition: border-color .2s, transform .2s, background .2s;
+  }
+  .dl-card:hover { border-color: var(--line-2); transform: translateY(-3px); background: var(--panel-2); }
+  .dl-card.primary { border-color: rgba(79,140,255,.45); background: linear-gradient(160deg, rgba(79,140,255,.10), rgba(139,92,246,.08)); }
+  .dl-card.primary:hover { border-color: rgba(79,140,255,.75); }
+  .dl-ico {
+    width: 38px; height: 38px; border-radius: 11px; display: grid; place-items: center;
+    margin-bottom: 12px; color: var(--accent-2); background: rgba(79,140,255,.14);
+  }
+  .dl-ico svg { width: 19px; height: 19px; }
+  .dl-card.primary .dl-ico { color: #fff; background: linear-gradient(135deg, var(--accent), var(--accent-2)); }
+  .dl-card b { font-size: 1.02rem; font-weight: 600; }
+  .dl-card small { color: var(--txt-2); font-size: .88rem; }
+  .dl-card em { margin-top: 8px; color: var(--txt-3); font-size: .8rem; font-style: normal; }
+  .dl-card code, .dl-code {
+    font-family: ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
+    font-size: .84em; background: rgba(255,255,255,.06);
+    padding: .12em .42em; border-radius: 6px; color: var(--txt);
+  }
+  .dl-note {
+    margin-top: 18px; padding: 16px 18px; border-radius: 14px;
+    background: var(--panel); border: 1px solid var(--line);
+    display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px;
+    font-size: .9rem; color: var(--txt-2);
+  }
+  .dl-note b { color: var(--txt); font-weight: 600; }
+  .dl-hint { color: var(--txt-3); font-size: .85rem; }
+  .dl-hint a { color: var(--accent-2); }
+
   /* ── screenshot ────────────────────────────────────── */
   .shot-wrap {
     margin-top: 26px; border-radius: 18px; overflow: hidden;
@@ -156,8 +195,9 @@
       telemetry — open it and it works, even with no API key.
     </p>
     <div class="cta">
-      <a class="btn btn-primary" href="https://github.com/Abhijeet-Kumar-Prajapati/olmavax-A.I">View on GitHub</a>
+      <a class="btn btn-primary" href="https://github.com/Abhijeet-Kumar-Prajapati/olmavax-A.I/archive/refs/tags/v3.0.0.zip" download>Download v3.0.0</a>
       <a class="btn btn-ghost" href="#install">Quick start</a>
+      <a class="btn btn-ghost" href="https://github.com/Abhijeet-Kumar-Prajapati/olmavax-A.I">View on GitHub</a>
     </div>
     <div class="badges">
       <span class="badge"><b>Zero</b>&nbsp;dependencies</span>
@@ -169,6 +209,49 @@
     </div>
   </div>
 </header>
+
+<section id="download">
+  <div class="wrap">
+    <h2>Download</h2>
+    <p class="sub">One file. Nothing to install — Node.js is the only requirement.</p>
+
+    <div class="dl-grid">
+      <a class="dl-card primary" href="https://github.com/Abhijeet-Kumar-Prajapati/olmavax-A.I/archive/refs/tags/v3.0.0.zip" download>
+        <span class="dl-ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v10M8.5 10.5L12 14l3.5-3.5"/><path d="M5 19h14"/></svg>
+        </span>
+        <b>Download ZIP</b>
+        <small>v3.0.0 · works on Windows, macOS and Linux</small>
+        <em>Right-click &rarr; Extract Here, then <code>npm start</code></em>
+      </a>
+
+      <a class="dl-card" href="https://github.com/Abhijeet-Kumar-Prajapati/olmavax-A.I/archive/refs/tags/v3.0.0.tar.gz" download>
+        <span class="dl-ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16v12a2 2 0 01-2 2H6a2 2 0 01-2-2z"/><path d="M9 7V5a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>
+        </span>
+        <b>Download tar.gz</b>
+        <small>v3.0.0 · for Linux and macOS terminals</small>
+        <em><code>tar -xzf</code> then <code>npm start</code></em>
+      </a>
+
+      <a class="dl-card" href="https://github.com/Abhijeet-Kumar-Prajapati/olmavax-A.I/releases/tag/v3.0.0">
+        <span class="dl-ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>
+        </span>
+        <b>All releases</b>
+        <small>Every version, with change notes</small>
+        <em>Clone with git, or pick an older build</em>
+      </a>
+    </div>
+
+    <div class="dl-note">
+      <b>Prefer the terminal?</b>
+      <code class="dl-code">git clone https://github.com/Abhijeet-Kumar-Prajapati/olmavax-A.I.git</code>
+      <code class="dl-code">cd olmavax-A.I &amp;&amp; npm start</code>
+      <span class="dl-hint">Then open <a href="http://127.0.0.1:8787">http://127.0.0.1:8787</a></span>
+    </div>
+  </div>
+</section>
 
 <section>
   <div class="wrap">
